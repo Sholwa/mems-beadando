@@ -1,8 +1,8 @@
 # mems-beadando
 
->*This project is a university course requirements.
-From now on, there will be localized descriptions. This applies to the whole project.
-Language is hungarian. Thank you for understanding.*
+*This project is a university course requirements.
+From now on, there will be hungarian descriptions. This applies to the whole project.
+Thank you for understanding.*
  
 ## rPI zene doboz.
 
