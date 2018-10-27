@@ -1,35 +1,19 @@
 # függvénykönyvtárak betöltése
 #       senseHat (eszköz tesztelése)
 #       zene lejátszás
-import vlc
-# mappa(ák) fájl(ok) kezelése
-import os
-# from os.path import join
 
+# mappa(ák) fájl(ok) meglétének ellenőrzése
+import os
 
 #print(os.path.isdir("C:\Users\dpazsitni\Documents\GitHub\mems-beadando\rPI_music_box"))
-path="c:/Users/dpazsitni/Documents/GitHub/mems-beadando/rPI_music_box/music"
-if os.path.isdir(path) == True:
+if os.path.isdir("c:/Users/dpazsitni/Documents/GitHub/mems-beadando/rPI_music_box/music") == True:
     print("The folder exists")
-    l=os.listdir(path)
-    
-    mp3=os.path.join(path,l[0])
-    #onlyfiles = [f for f in listdir(mypath) if isfile(join(mypath, f))]
-    
-    player=vlc.MediaPlayer(mp3)
-    player.play()
-    
-    input()
-    from time import sleep
-    sleep(10)
-    player.stop()
-    
 else:
     print("The folder is not exists")
 
 # Várakozás parancsra
 #while expression:
- #   pass
+#    pass
 
 #Fügvények
     #play
@@ -41,8 +25,4 @@ else:
     #previous
 
     #Schuffle
-
-    #Display
-
-
 
