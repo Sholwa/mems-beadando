@@ -6,4 +6,6 @@ Thank you for understanding.*
  
 ## rPI zene doboz
 
-Az eszköz egy rasberry pi 3 mikroszámítógépből és egy senseHat-ből áll. Az doboz vezérlése egy 5 gombos joystick által lehetséges (pl: play, pause, next song, previous song). Státusz kijelzése egy 8x8-as led mátrix-al  valósul meg. 
+Az eszköz egy Raspberry pi 3 mikroszámítógépből és egy SenseHat-ből áll. Az doboz vezérlése egy 5 gombos joystick által lehetséges (pl: lejátszás, szünet, következő / előző szám, hangerő szabályzása). Státusz kijelzése egy 8x8-as led mátrix-al valósul meg.
+
+Bővebb információk a [wiki](https://github.com/Sholwa/mems-beadando/wiki)-ben.
