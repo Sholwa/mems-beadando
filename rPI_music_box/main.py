@@ -11,6 +11,9 @@ index=0
 vol=0.2
 playing = ""
 
+red = (200, 0, 0)
+black = (0, 0, 0)
+
 #Fügvények
 def play_pause():
     global playing
@@ -82,7 +85,7 @@ def displayC(string):
     print(string)
 
 def displayH(string):
-    sense.show_message(string, text_colour=red, back_colour=blue, scroll_speed=0.05)
+    sense.show_message(string, text_colour=red, back_colour=black, scroll_speed=0.05)
 
 path="c:/rPI_music_box/music" # zene számok elérési útvonala
 os.chdir(path) # könyvtár váltás, hogy ne kelljen elérési utat definiálni a zenék lejátszásakor
@@ -135,17 +138,18 @@ if os.path.isdir(path) == True: # zene könyvtár meglétének ellenőrzése
         for event in sense.stick.get_events():
             if event.action == "pressed":
                 if event.direction == "up":
-                    play() # Fel
+                    volup()
                 elif event.direction == "down":
-                    stop() # Le
+                    voldown()
                 elif event.direction == "left": 
                     previous() # Bal
                 elif event.direction == "right":
                     next() # Jobb
                 elif event.direction == "middle":
-                    sense.show_letter("K")      # Közép
+                    play_pause()
                 sleep(0.5)
                 sense.clear()
+                # gyro szezorok segítségével(rPI eszköz megrázásával) a shuffle füfvény hívása
                 """
     #END - SenseHat event handler
 else:
