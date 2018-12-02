@@ -88,12 +88,12 @@ def displayH(string):
     sense.show_message(string, text_colour=red, back_colour=black, scroll_speed=0.05)
 
 path="c:/rPI_music_box/music" # zene számok elérési útvonala
-os.chdir(path) # könyvtár váltás, hogy ne kelljen elérési utat definiálni a zenék lejátszásakor
 l = [] # számok listája
 if os.path.isdir(path) == True: # zene könyvtár meglétének ellenőrzése
     print("==========================================")
     print("The music folder exists")
     print("==========================================")
+    os.chdir(path) # könyvtár váltás, hogy ne kelljen elérési utat definiálni a zenék lejátszásakor
     for files in os.listdir(path): # zene könyvtár listázása
         if files.endswith(".mp3"): # mp3 kiterejsztésű fájlokra szűrés
             l.append(files) # lejatászi lista létrehozása
