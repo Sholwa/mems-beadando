@@ -135,22 +135,34 @@ if os.path.isdir(path) == True: # zene könyvtár meglétének ellenőrzése
     """ # uncomment on rPI
     sense = SenseHat()
     while True:
-        for event in sense.stick.get_events():
-            if event.action == "pressed":
-                if event.direction == "up":
-                    volup()
-                elif event.direction == "down":
-                    voldown()
-                elif event.direction == "left": 
-                    previous() # Bal
-                elif event.direction == "right":
-                    next() # Jobb
-                elif event.direction == "middle":
-                    play_pause()
-                sleep(0.5)
-                sense.clear()
-                # gyro szezorok segítségével(rPI eszköz megrázásával) a shuffle füfvény hívása
-                """
+        acceleration = sense.get_accelerometer_raw()
+        x = acceleration['x']
+        y = acceleration['y']
+        z = acceleration['z']
+
+        x = abs(x)
+        y = abs(y)
+        z = abs(z)
+
+        if x > 1 or y > 1 or z > 1:
+            shuffle()
+        else:
+            for event in sense.stick.get_events():
+                if event.action == "pressed":
+                    if event.direction == "up":
+                        volup()
+                    elif event.direction == "down":
+                        voldown()
+                    elif event.direction == "left": 
+                        previous() # Bal
+                    elif event.direction == "right":
+                        next() # Jobb
+                    elif event.direction == "middle":
+                        play_pause()
+                    sleep(0.5)
+                    sense.clear()
+                    # gyro szezorok segítségével(rPI eszköz megrázásával) a shuffle füfvény hívása
+                    """
     #END - SenseHat event handler
 else:
     print("The music folder is not exists")
