@@ -38,7 +38,6 @@ def play_pause():
 def next():
     global index
     global playing
-    index += 1
     mp3.load(l[index])
     mp3.play()
     playing = True
@@ -49,7 +48,6 @@ def next():
 def previous():
     global index
     global playing
-    index -= 1
     mp3.load(l[index])
     mp3.play()
     playing = True
@@ -124,8 +122,12 @@ if os.path.isdir(path) == True: # zene könyvtár meglétének ellenőrzése
                 elif event.key == ord ( "p" ):
                     play_pause() # P
                 elif event.key == ord ( "Ĕ" ):
+                    index -= 1
+                    print(index) # RPI-n nem kell
                     previous() # Bal
                 elif event.key == ord ( "ē" ):
+                    index += 1
+                    print(index) #RPI-n nem kell
                     next() # Jobb
                 elif event.key == ord ( "s" ):
                     shuffle() # S
