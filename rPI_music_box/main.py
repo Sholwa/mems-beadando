@@ -123,10 +123,14 @@ if os.path.isdir(path) == True: # zene könyvtár meglétének ellenőrzése
                     play_pause() # P
                 elif event.key == ord ( "Ĕ" ):
                     index -= 1
+                    if index < 0:
+                        index = lSize-1
                     print(index) # RPI-n nem kell
                     previous() # Bal
                 elif event.key == ord ( "ē" ):
                     index += 1
+                    if index == lSize:
+                        index = 0
                     print(index) #RPI-n nem kell
                     next() # Jobb
                 elif event.key == ord ( "s" ):
