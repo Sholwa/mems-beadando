@@ -34,6 +34,8 @@ def play_pause():
         print("Playing:")
         displayC(l[index])
         #displayH(l[index]) # uncomment on rPI
+        print("Next:")
+        print(l[index+1])
 
 def next():
     global index
@@ -44,6 +46,8 @@ def next():
     print("Playing:")
     displayC(l[index])
     #displayH(l[index]) # uncomment on rPI
+    print("Next:")
+    print(l[index+1])
 
 def previous():
     global index
@@ -54,9 +58,12 @@ def previous():
     print("Playing:")
     displayC(l[index])
     #displayH(l[index]) # uncomment on rPI
+    print("Next:")
+    print(l[index+1])
 
 def shuffle(): #5 zene lista megkeverése
     global playing
+    global index
     random.shuffle(l)
     index = 0
     mp3.load(l[index])
@@ -66,6 +73,8 @@ def shuffle(): #5 zene lista megkeverése
     print("Playing:")
     displayC(l[index])
     #displayH(l[index]) # uncomment on rPI
+    print("Next:")
+    print(l[index+1])
 
 def volup():
     global vol
@@ -107,6 +116,8 @@ if os.path.isdir(path) == True: # zene könyvtár meglétének ellenőrzése
     import sys # GUI kilépéshez
     pygame.display.init()
     screen = pygame.display.set_mode ( ( 320 , 240 ) )
+    SONG_END = pygame.USEREVENT + 1
+    mp3.set_endevent(SONG_END)
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -135,6 +146,13 @@ if os.path.isdir(path) == True: # zene könyvtár meglétének ellenőrzése
                     next() # Jobb
                 elif event.key == ord ( "s" ):
                     shuffle() # S
+            elif event.type == SONG_END:
+                print("the song ended!")
+                index += 1
+                if index == lSize:
+                    index = 0
+                print(index) #RPI-n nem kell
+                next() # Jobb
     #END - PyGame event handler (ideiglenes SenseHat helyett)
     
     #START - SenseHat event handler
