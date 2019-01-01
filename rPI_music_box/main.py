@@ -111,13 +111,13 @@ if os.path.isdir(path) == True: # zene könyvtár meglétének ellenőrzése
     print("==========================================")
     pygame.mixer.init() # lejátszó inicializálása
     mp3.set_volume(vol)
+    SONG_END = pygame.USEREVENT + 1 # szám vége event definiálása
+    mp3.set_endevent(SONG_END)
 
     #START - PyGame event handler (ideiglenes SenseHat helyett)
     import sys # GUI kilépéshez
     pygame.display.init()
     screen = pygame.display.set_mode ( ( 320 , 240 ) )
-    SONG_END = pygame.USEREVENT + 1
-    mp3.set_endevent(SONG_END)
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -146,8 +146,9 @@ if os.path.isdir(path) == True: # zene könyvtár meglétének ellenőrzése
                     next() # Jobb
                 elif event.key == ord ( "s" ):
                     shuffle() # S
-            elif event.type == SONG_END:
-                print("the song ended!")
+            elif event.type == SONG_END: # szám végének figyelése
+                print("==========================================")
+                print("The song ended!")
                 index += 1
                 if index == lSize:
                     index = 0
