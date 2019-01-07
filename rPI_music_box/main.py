@@ -1,7 +1,7 @@
 # This Python file uses the following encoding: utf-8
 # # senseHat (eszköz tesztelése)
 #   függvénykönyvtárak betöltése
-#from sense_hat import SenseHat # uncomment on rPI
+from sense_hat import SenseHat # uncomment on rPI
 import pygame #zene lejátszáshoz
 from pygame.mixer import music as mp3 #zene lejátszáshoz
 import os # mappa(ák) fájl(ok) kezelése
@@ -12,8 +12,8 @@ index=0
 vol=0.2
 playing = ""
 
-red = (200, 0, 0)
-black = (0, 0, 0)
+g = (0, 255, 0) # Green
+b = (0, 0, 0) # Black
 
 #Fügvények
 def play_pause():
@@ -22,45 +22,50 @@ def play_pause():
         mp3.pause()
         playing = False
         print("Paused")
+        displayH("pause") # uncomment on rPI
     elif playing == False:
         mp3.unpause()
         playing = True
         print("Playing:")
         displayC(l[index])
-        #displayH(l[index]) # uncomment on rPI
+        displayH("play") # uncomment on rPI
     else:
         mp3.load(l[index])  # az első szám betöltése
         mp3.play()
         playing = True
         print("Playing:")
         displayC(l[index])
-        #displayH(l[index]) # uncomment on rPI
+        displayH("play") # uncomment on rPI
         print("Next:")
         print(l[index+1])
 
 def next():
     global index
     global playing
+    displayH("next") # uncomment on rPI
     mp3.load(l[index])
     mp3.play()
     playing = True
     print("Playing:")
     displayC(l[index])
-    #displayH(l[index]) # uncomment on rPI
     print("Next:")
     print(l[index+1])
+    sleep(1)
+    displayH("play") # uncomment on rPI
 
 def previous():
     global index
     global playing
+    displayH("previous") # uncomment on rPI
     mp3.load(l[index])
     mp3.play()
     playing = True
     print("Playing:")
     displayC(l[index])
-    #displayH(l[index]) # uncomment on rPI
     print("Next:")
     print(l[index+1])
+    sleep(1)
+    displayH("play") # uncomment on rPI
 
 def shuffle(): #5 zene lista megkeverése
     global playing
@@ -70,12 +75,14 @@ def shuffle(): #5 zene lista megkeverése
     mp3.load(l[index])
     mp3.play()
     playing = True
+    displayH("shuffle") # uncomment on rPI
     print("Shuffle")
     print("Playing:")
     displayC(l[index])
-    #displayH(l[index]) # uncomment on rPI
     print("Next:")
     print(l[index+1])
+    sleep(1)
+    displayH("play") # uncomment on rPI
 
 def volup():
     global vol
@@ -92,10 +99,67 @@ def voldown():
 def displayC(string):
     print(string)
 
-def displayH(string):
-    sense.show_message(string, text_colour=red, back_colour=black, scroll_speed=0.05)
+def displayH(action):
+    sense.clear()
+    if action == "play":
+        pixels = [
+            b, b, b, b, b, b, b, b,
+            b, b, g, b, b, b, b, b,
+            b, b, g, g, b, b, b, b,
+            b, b, g, g, g, b, b, b,
+            b, b, g, g, b, b, b, b,
+            b, b, g, b, b, b, b, b,
+            b, b, b, b, b, b, b, b,
+            b, b, b, b, b, b, b, b
+        ]
+    elif action == "pause":
+        pixels = [
+            b, b, b, b, b, b, b, b,
+            b, g, g, b, g, g, b, b,
+            b, g, g, b, g, g, b, b,
+            b, g, g, b, g, g, b, b,
+            b, g, g, b, g, g, b, b,
+            b, g, g, b, g, g, b, b,
+            b, b, b, b, b, b, b, b,
+            b, b, b, b, b, b, b, b
+        ]
+    elif action == "next":
+        pixels = [
+            b, b, b, b, b, b, b, b,
+            b, b, b, b, b, g, b, b,
+            b, g, b, b, b, g, g, b,
+            b, g, g, b, b, g, g, g,
+            b, g, g, g, b, g, g, b,
+            b, g, g, b, b, g, b, b,
+            b, g, b, b, b, b, b, b,
+            b, b, b, b, b, b, b, b
+        ]
+    elif action == "previous":
+        pixels = [
+            b, b, b, b, b, b, b, b,
+            b, b, g, b, b, b, b, b,
+            b, g, g, b, b, b, g, b,
+            g, g, g, b, b, g, g, b,
+            b, g, g, b, g, g, g, b,
+            b, b, g, b, b, g, g, b,
+            b, b, b, b, b, b, g, b,
+            b, b, b, b, b, b, b, b
+        ]
+    elif action == "shuffle":
+        pixels = [
+            b, b, b, b, b, b, g, b,
+            b, b, b, b, g, g, g, g,
+            g, g, b, g, b, b, g, b,
+            b, b, g, b, b, b, b, b,
+            b, b, g, b, b, b, b, b,
+            g, g, b, g, b, b, g, b,
+            b, b, b, b, g, g, g, g,
+            b, b, b, b, b, b, g, b
+        ]
+    sense.set_pixels(pixels)
 
-path="c:/rPI_music_box/music" # zene számok elérési útvonala
+path="/home/pi/Documents/rPI_music_box/music" # zene számok elérési útvonala rPi-n
+#path="c:/rPI_music_box/music" # zene számok elérési útvonala windows-on
 l = [] # számok listája
 if os.path.isdir(path) == True: # zene könyvtár meglétének ellenőrzése
     print("==========================================")
@@ -115,6 +179,7 @@ if os.path.isdir(path) == True: # zene könyvtár meglétének ellenőrzése
     SONG_END = pygame.USEREVENT + 1 # szám vége event definiálása
     mp3.set_endevent(SONG_END)
 
+    sense = SenseHat() # ideiglenes
     #START - PyGame event handler (ideiglenes SenseHat helyett)
     import sys # GUI kilépéshez
     pygame.display.init()
