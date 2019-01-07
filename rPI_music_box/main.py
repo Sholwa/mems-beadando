@@ -1,4 +1,5 @@
-# senseHat (eszköz tesztelése)
+# This Python file uses the following encoding: utf-8
+# # senseHat (eszköz tesztelése)
 #   függvénykönyvtárak betöltése
 #from sense_hat import SenseHat # uncomment on rPI
 import pygame #zene lejátszáshoz
