@@ -179,8 +179,7 @@ if os.path.isdir(path) == True: # zene könyvtár meglétének ellenőrzése
     SONG_END = pygame.USEREVENT + 1 # szám vége event definiálása
     mp3.set_endevent(SONG_END)
 
-    sense = SenseHat() # ideiglenes
-    #START - PyGame event handler (ideiglenes SenseHat helyett)
+    """#START - PyGame event handler (ideiglenes SenseHat helyett)
     import sys # GUI kilépéshez
     pygame.display.init()
     screen = pygame.display.set_mode ( ( 320 , 240 ) )
@@ -220,40 +219,48 @@ if os.path.isdir(path) == True: # zene könyvtár meglétének ellenőrzése
                     index = 0
                 print(index) #RPI-n nem kell
                 next() # Jobb
-    #END - PyGame event handler (ideiglenes SenseHat helyett)
+    #END - PyGame event handler (ideiglenes SenseHat helyett)"""
     
     #START - SenseHat event handler
-    """ # uncomment on rPI
     sense = SenseHat()
+    pygame.display.init()
     while True:
         acceleration = sense.get_accelerometer_raw()
-        x = acceleration['x']
-        y = acceleration['y']
-        z = acceleration['z']
-
-        x = abs(x)
-        y = abs(y)
-        z = abs(z)
-
-        if x > 1 or y > 1 or z > 1:
+        x = abs(acceleration['x'])
+        y = abs(acceleration['y'])
+        z = abs(acceleration['z'])
+        if x > 2 or y > 2 or z > 2:
+            print("==========================================")
             shuffle()
         else:
             for event in sense.stick.get_events():
                 if event.action == "pressed":
+                    print("==========================================")
                     if event.direction == "up":
                         volup()
                     elif event.direction == "down":
                         voldown()
-                    elif event.direction == "left": 
+                    elif event.direction == "left":
+                        index -= 1
+                        if index < 0:
+                            index = lSize-1
                         previous() # Bal
                     elif event.direction == "right":
+                        index += 1
+                        if index == lSize:
+                            index = 0
                         next() # Jobb
                     elif event.direction == "middle":
                         play_pause()
-                    sleep(0.5)
-                    sense.clear()
-                    # gyro szezorok segítségével(rPI eszköz megrázásával) a shuffle füfvény hívása
-                    """
+            for event in pygame.event.get():
+                if event.type == SONG_END: # szám végének figyelése
+                    print("==========================================")
+                    print("The song ended!")
+                    index += 1
+                    if index == lSize:
+                        index = 0
+                    print(index) #RPI-n nem kell
+                    next() # Jobb
     #END - SenseHat event handler
 else:
     print("The music folder is not exists")
