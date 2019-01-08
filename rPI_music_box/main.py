@@ -13,7 +13,7 @@ index=0 # első zeneszám beállítása
 vol=0.5 # kezdeti nagerő érték
 playing = "" # kezdeti lejtászás státusz
 
-g = (0, 255, 0) # Green
+g = (0, 100, 0) # Green
 b = (0, 0, 0) # Black
 
 musicpath=os.path.join(sys.path[0], "music")
