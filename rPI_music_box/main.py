@@ -235,47 +235,6 @@ if os.path.isdir(musicpath) == True: # zene könyvtár meglétének ellenőrzés
     print("")
     print("==========================================")
 
-    """#START - PyGame event handler (ideiglenes SenseHat helyett)
-    import sys # GUI kilépéshez
-    pygame.display.init()
-    screen = pygame.display.set_mode ( ( 320 , 240 ) )
-    while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                sys.exit()
-            elif event.type == pygame.KEYDOWN:
-                print("==========================================")
-                if event.key == ord ( "đ" ):
-                    print("Volume up") # Fel
-                    volup()
-                elif event.key == ord ( "Ē" ):
-                    print("Volume down") # Le
-                    voldown()
-                elif event.key == ord ( "p" ):
-                    play_pause() # P
-                elif event.key == ord ( "Ĕ" ):
-                    index -= 1
-                    if index < 0:
-                        index = lSize-1
-                    print(index) # RPI-n nem kell
-                    previous() # Bal
-                elif event.key == ord ( "ē" ):
-                    index += 1
-                    if index == lSize:
-                        index = 0
-                    print(index) #RPI-n nem kell
-                    next() # Jobb
-                elif event.key == ord ( "s" ):
-                    shuffle() # S
-            elif event.type == SONG_END: # szám végének figyelése
-                print("==========================================")
-                print("The song ended!")
-                index += 1
-                if index == lSize:
-                    index = 0
-                print(index) #RPI-n nem kell
-                next() # Jobb
-    #END - PyGame event handler (ideiglenes SenseHat helyett)"""
     #START - SenseHat event handler
     sense = SenseHat() # semse Hat inicializálása
     # SYSTEMD BugFix
