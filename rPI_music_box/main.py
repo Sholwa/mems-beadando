@@ -8,14 +8,19 @@ import os # mappa(ák) fájl(ok) kezelése
 from time import sleep
 import random # shuffle funkció miatt
 
-index=0
-vol=0.2
-playing = ""
+# Változók és konstansok definiálása:
+index=0 # első zeneszám beállítása
+vol=0.5 # kezdeti nagerő érték
+playing = "" # kezdeti lejtászás státusz
 
 g = (0, 255, 0) # Green
 b = (0, 0, 0) # Black
 
-#Fügvények
+musicpath=os.path.join(sys.path[0], "music")
+l = [] # számok listája
+
+SONG_END = pygame.USEREVENT + 1 # szám vége esemény definiálása
+mp3.set_endevent(SONG_END)
 def play_pause():
     global playing
     if playing == True:
@@ -158,15 +163,13 @@ def displayH(action):
         ]
     sense.set_pixels(pixels)
 
-path="/home/pi/Documents/rPI_music_box/music" # zene számok elérési útvonala rPi-n
-#path="c:/rPI_music_box/music" # zene számok elérési útvonala windows-on
-l = [] # számok listája
-if os.path.isdir(path) == True: # zene könyvtár meglétének ellenőrzése
+# Zeneszámok betöltése, rendezése, lejátszó inicializálása
+if os.path.isdir(musicpath) == True: # zene könyvtár meglétének ellenőrzése
     print("==========================================")
     print("The music folder exists")
     print("==========================================")
-    os.chdir(path) # könyvtár váltás, hogy ne kelljen elérési utat definiálni a zenék lejátszásakor
-    for files in os.listdir(path): # zene könyvtár listázása
+    os.chdir(musicpath) # könyvtár váltás, hogy ne kelljen elérési utat definiálni a zenék lejátszásakor
+    for files in os.listdir(musicpath): # zene könyvtár listázása
         if files.endswith(".mp3"): # mp3 kiterejsztésű fájlokra szűrés
             l.append(files) # lejatászi lista létrehozása
             print(files)
@@ -174,10 +177,6 @@ if os.path.isdir(path) == True: # zene könyvtár meglétének ellenőrzése
     lSize=len(l) # számok darabszámának tárolása
     print("")
     print("==========================================")
-    pygame.mixer.init() # lejátszó inicializálása
-    mp3.set_volume(vol)
-    SONG_END = pygame.USEREVENT + 1 # szám vége event definiálása
-    mp3.set_endevent(SONG_END)
 
     """#START - PyGame event handler (ideiglenes SenseHat helyett)
     import sys # GUI kilépéshez
@@ -220,10 +219,21 @@ if os.path.isdir(path) == True: # zene könyvtár meglétének ellenőrzése
                 print(index) #RPI-n nem kell
                 next() # Jobb
     #END - PyGame event handler (ideiglenes SenseHat helyett)"""
-    
     #START - SenseHat event handler
     sense = SenseHat()
-    pygame.display.init()
+
+    # SYSTEMD BugFix
+    import signal
+    def handler(signum, frame):
+        pass
+        
+    try:
+        signal.signal(signal.SIGHUP, handler)
+    except AttributeError:
+        pass
+    #_________________
+    pygame.init()
+    mp3.set_volume(vol) # kezdeti hangerő beállítása
     while True:
         acceleration = sense.get_accelerometer_raw()
         x = abs(acceleration['x'])
