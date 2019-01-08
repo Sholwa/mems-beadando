@@ -112,19 +112,37 @@ def shuffle(): #5 zene lista megkeverése
 
 def volup():
     global vol
+    global playing
     vol += 0.02
     mp3.set_volume(vol)
     #cvol = mp3.get_volume()
     newlogline("Volume up")
     print(mp3.get_volume())
+    sense.show_letter("+",text_colour=g,back_colour=b)
+    sleep(0.3)
+    if playing == False:
+        displayH("pause")
+    elif playing == True:
+        displayH("play")
+    else:
+        displayH("smile")
 
 def voldown():
     global vol
+    global playing
     vol -= 0.02
     mp3.set_volume(vol)
     #cvol = mp3.get_volume()
     newlogline("Volume down")
     print(mp3.get_volume())
+    sense.show_letter("-",text_colour=g,back_colour=b)
+    sleep(0.3)
+    if playing == False:
+        displayH("pause")
+    elif playing == True:
+        displayH("play")
+    else:
+        displayH("smile")
 
 def displayH(action): # logók mghivása
     sense.clear()
@@ -182,6 +200,17 @@ def displayH(action): # logók mghivása
             g, g, b, g, b, b, g, b,
             b, b, b, b, g, g, g, g,
             b, b, b, b, b, b, g, b
+        ]
+    elif action == "smile":
+        pixels = [
+            b, b, b, b, b, b, b, b,
+            b, b, b, b, b, b, b, b,
+            b, b, g, b, g, b, b, b,
+            b, b, b, b, b, b, b, b,
+            b, g, b, b, b, g, b, b,
+            b, b, g, g, g, b, b, b,
+            b, b, b, b, b, b, b, b,
+            b, b, b, b, b, b, b, b
         ]
     sense.set_pixels(pixels)
 
@@ -262,6 +291,8 @@ if os.path.isdir(musicpath) == True: # zene könyvtár meglétének ellenőrzés
     #_________________
     pygame.init() # pygame importált moduljaninak inicializálása
     mp3.set_volume(vol) # kezdeti hangerő beállítása
+    sense.show_message("Welcome! Lets start listening...", scroll_speed=0.08, text_colour=g, back_colour=b)
+    displayH("smile")
     while True:
         acceleration = sense.get_accelerometer_raw() # gyorsulámérő gyers adatok lekérése
         x = abs(acceleration['x'])
