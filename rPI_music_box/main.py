@@ -277,8 +277,7 @@ if os.path.isdir(musicpath) == True: # zene könyvtár meglétének ellenőrzés
                 next() # Jobb
     #END - PyGame event handler (ideiglenes SenseHat helyett)"""
     #START - SenseHat event handler
-    sense = SenseHat()
-
+    sense = SenseHat() # semse Hat inicializálása
     # SYSTEMD BugFix
     import signal
     def handler(signum, frame):
@@ -291,8 +290,8 @@ if os.path.isdir(musicpath) == True: # zene könyvtár meglétének ellenőrzés
     #_________________
     pygame.init() # pygame importált moduljaninak inicializálása
     mp3.set_volume(vol) # kezdeti hangerő beállítása
-    sense.show_message("Welcome! Lets start listening...", scroll_speed=0.08, text_colour=g, back_colour=b)
-    displayH("smile")
+    sense.show_message("Welcome! Lets start listening...", scroll_speed=0.08, text_colour=g, back_colour=b) # üdvözlő üzenet
+    displayH("smile") # smile jelzi, hogy betöltött a program
     while True:
         acceleration = sense.get_accelerometer_raw() # gyorsulámérő gyers adatok lekérése
         x = abs(acceleration['x'])
