@@ -1,12 +1,22 @@
 # This Python file uses the following encoding: utf-8
-# # senseHat (eszköz tesztelése)
-#   függvénykönyvtárak betöltése
+
+# Függvénykönyvtárak betöltése:
 from sense_hat import SenseHat # uncomment on rPI
 import pygame #zene lejátszáshoz
 from pygame.mixer import music as mp3 #zene lejátszáshoz
 import os # mappa(ák) fájl(ok) kezelése
+import time
+import datetime
 from time import sleep
 import random # shuffle funkció miatt
+import sys
+
+# LOG FIle kezelés:
+timestamp = datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d_%H.%M.%S')
+logpath=os.path.join(sys.path[0], "log", "rPI_music_box_")+timestamp+".log"
+def newlogline(string):
+    with open(logpath, "a") as log:
+        log.write(string+"\n")
 
 # Változók és konstansok definiálása:
 index=0 # első zeneszám beállítása
@@ -21,28 +31,46 @@ l = [] # számok listája
 
 SONG_END = pygame.USEREVENT + 1 # szám vége esemény definiálása
 mp3.set_endevent(SONG_END)
+
+# Fügvények:
+def displayCL():
+    global l
+    global index
+    newlogline("Playing:")
+    newlogline(l[index])
+    print("Playing:")
+    print(l[index])  
+    print("Next:")
+    newlogline("Next:")
+    if index == lSize-1:
+        print(l[0])
+        newlogline(l[0])
+    elif index < 0:
+        print(l[lSize-1])
+        newlogline(l[lSize-1])
+    else:
+        print(l[index+1])
+        newlogline(l[index+1])
+
 def play_pause():
     global playing
     if playing == True:
         mp3.pause()
         playing = False
         print("Paused")
+        newlogline("Paused")
         displayH("pause") # uncomment on rPI
     elif playing == False:
         mp3.unpause()
         playing = True
-        print("Playing:")
-        displayC(l[index])
+        displayCL()
         displayH("play") # uncomment on rPI
     else:
         mp3.load(l[index])  # az első szám betöltése
         mp3.play()
         playing = True
-        print("Playing:")
-        displayC(l[index])
         displayH("play") # uncomment on rPI
-        print("Next:")
-        print(l[index+1])
+        displayCL()
 
 def next():
     global index
@@ -51,10 +79,7 @@ def next():
     mp3.load(l[index])
     mp3.play()
     playing = True
-    print("Playing:")
-    displayC(l[index])
-    print("Next:")
-    print(l[index+1])
+    displayCL()
     sleep(1)
     displayH("play") # uncomment on rPI
 
@@ -65,10 +90,7 @@ def previous():
     mp3.load(l[index])
     mp3.play()
     playing = True
-    print("Playing:")
-    displayC(l[index])
-    print("Next:")
-    print(l[index+1])
+    displayCL()
     sleep(1)
     displayH("play") # uncomment on rPI
 
@@ -81,11 +103,9 @@ def shuffle(): #5 zene lista megkeverése
     mp3.play()
     playing = True
     displayH("shuffle") # uncomment on rPI
-    print("Shuffle")
-    print("Playing:")
-    displayC(l[index])
-    print("Next:")
-    print(l[index+1])
+    newlogline("rPI Shuffled")
+    print("rPI Shuffled")
+    displayCL()
     sleep(1)
     displayH("play") # uncomment on rPI
 
@@ -93,16 +113,17 @@ def volup():
     global vol
     vol += 0.02
     mp3.set_volume(vol)
+    #cvol = mp3.get_volume()
+    newlogline("Volume up")
     print(mp3.get_volume())
 
 def voldown():
     global vol
     vol -= 0.02
     mp3.set_volume(vol)
+    #cvol = mp3.get_volume()
+    newlogline("Volume down")
     print(mp3.get_volume())
-
-def displayC(string):
-    print(string)
 
 def displayH(action):
     sense.clear()
@@ -168,13 +189,19 @@ if os.path.isdir(musicpath) == True: # zene könyvtár meglétének ellenőrzés
     print("==========================================")
     print("The music folder exists")
     print("==========================================")
+    newlogline("==========================================")
+    newlogline("The music folder exists")
+    newlogline("==========================================")
     os.chdir(musicpath) # könyvtár váltás, hogy ne kelljen elérési utat definiálni a zenék lejátszásakor
     for files in os.listdir(musicpath): # zene könyvtár listázása
         if files.endswith(".mp3"): # mp3 kiterejsztésű fájlokra szűrés
             l.append(files) # lejatászi lista létrehozása
             print(files)
+            newlogline(files)
     l.sort() # számok sorba rendezése
     lSize=len(l) # számok darabszámának tárolása
+    newlogline("")
+    newlogline("==========================================")
     print("")
     print("==========================================")
 
@@ -240,11 +267,13 @@ if os.path.isdir(musicpath) == True: # zene könyvtár meglétének ellenőrzés
         y = abs(acceleration['y'])
         z = abs(acceleration['z'])
         if x > 2 or y > 2 or z > 2:
+            newlogline("==========================================")
             print("==========================================")
             shuffle()
         else:
             for event in sense.stick.get_events():
                 if event.action == "pressed":
+                    newlogline("==========================================")
                     print("==========================================")
                     if event.direction == "up":
                         volup()
@@ -264,13 +293,15 @@ if os.path.isdir(musicpath) == True: # zene könyvtár meglétének ellenőrzés
                         play_pause()
             for event in pygame.event.get():
                 if event.type == SONG_END: # szám végének figyelése
+                    newlogline("==========================================")
+                    newlogline("The song ended!")
                     print("==========================================")
                     print("The song ended!")
                     index += 1
                     if index == lSize:
                         index = 0
-                    print(index) #RPI-n nem kell
                     next() # Jobb
     #END - SenseHat event handler
 else:
+    newlogline("The music folder is not exists")
     print("The music folder is not exists")
