@@ -2,14 +2,14 @@
 
 # Függvénykönyvtárak betöltése:
 from sense_hat import SenseHat # uncomment on rPI
-import pygame #zene lejátszáshoz
+import pygame #pygame eseménykezelés miatt
 from pygame.mixer import music as mp3 #zene lejátszáshoz
 import os # mappa(ák) fájl(ok) kezelése
-import time
-import datetime
+import time # log timestamp miatt
+import datetime # log timestamp miatt
 from time import sleep
 import random # shuffle funkció miatt
-import sys
+import sys # csript mappájának meghatározása, szolgáltatásként futattva (sys.path[0])
 
 # LOG FIle kezelés:
 timestamp = datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d_%H.%M.%S')
@@ -26,14 +26,14 @@ playing = "" # kezdeti lejtászás státusz
 g = (0, 100, 0) # Green
 b = (0, 0, 0) # Black
 
-musicpath=os.path.join(sys.path[0], "music")
+musicpath=os.path.join(sys.path[0], "music") # platform függtlen elérési út definiálása
 l = [] # számok listája
 
 SONG_END = pygame.USEREVENT + 1 # szám vége esemény definiálása
 mp3.set_endevent(SONG_END)
 
 # Fügvények:
-def displayCL():
+def displayCL(): #conslo-ra és logba írás egyszerűsítése
     global l
     global index
     newlogline("Playing:")
@@ -42,7 +42,7 @@ def displayCL():
     print(l[index])  
     print("Next:")
     newlogline("Next:")
-    if index == lSize-1:
+    if index == lSize-1: # index határérték kezelése
         print(l[0])
         newlogline(l[0])
     elif index < 0:
@@ -59,40 +59,40 @@ def play_pause():
         playing = False
         print("Paused")
         newlogline("Paused")
-        displayH("pause") # uncomment on rPI
+        displayH("pause")
     elif playing == False:
         mp3.unpause()
         playing = True
         displayCL()
-        displayH("play") # uncomment on rPI
+        displayH("play")
     else:
         mp3.load(l[index])  # az első szám betöltése
         mp3.play()
         playing = True
-        displayH("play") # uncomment on rPI
+        displayH("play")
         displayCL()
 
 def next():
     global index
     global playing
-    displayH("next") # uncomment on rPI
+    displayH("next")
     mp3.load(l[index])
     mp3.play()
     playing = True
     displayCL()
     sleep(1)
-    displayH("play") # uncomment on rPI
+    displayH("play")
 
 def previous():
     global index
     global playing
-    displayH("previous") # uncomment on rPI
+    displayH("previous")
     mp3.load(l[index])
     mp3.play()
     playing = True
     displayCL()
     sleep(1)
-    displayH("play") # uncomment on rPI
+    displayH("play")
 
 def shuffle(): #5 zene lista megkeverése
     global playing
@@ -125,7 +125,7 @@ def voldown():
     newlogline("Volume down")
     print(mp3.get_volume())
 
-def displayH(action):
+def displayH(action): # logók mghivása
     sense.clear()
     if action == "play":
         pixels = [
@@ -189,7 +189,7 @@ if os.path.isdir(musicpath) == True: # zene könyvtár meglétének ellenőrzés
     print("==========================================")
     print("The music folder exists")
     print("==========================================")
-    newlogline("==========================================")
+    newlogline(("=========================================="))
     newlogline("The music folder exists")
     newlogline("==========================================")
     os.chdir(musicpath) # könyvtár váltás, hogy ne kelljen elérési utat definiálni a zenék lejátszásakor
@@ -259,19 +259,19 @@ if os.path.isdir(musicpath) == True: # zene könyvtár meglétének ellenőrzés
     except AttributeError:
         pass
     #_________________
-    pygame.init()
+    pygame.init() # pygame importált moduljaninak inicializálása
     mp3.set_volume(vol) # kezdeti hangerő beállítása
     while True:
-        acceleration = sense.get_accelerometer_raw()
+        acceleration = sense.get_accelerometer_raw() # gyorsulámérő gyers adatok lekérése
         x = abs(acceleration['x'])
         y = abs(acceleration['y'])
         z = abs(acceleration['z'])
-        if x > 2 or y > 2 or z > 2:
+        if x > 2 or y > 2 or z > 2: # az eszköz "rázásának" érzékelése
             newlogline("==========================================")
             print("==========================================")
             shuffle()
         else:
-            for event in sense.stick.get_events():
+            for event in sense.stick.get_events(): # senseHat események figyelése
                 if event.action == "pressed":
                     newlogline("==========================================")
                     print("==========================================")
@@ -281,26 +281,26 @@ if os.path.isdir(musicpath) == True: # zene könyvtár meglétének ellenőrzés
                         voldown()
                     elif event.direction == "left":
                         index -= 1
-                        if index < 0:
+                        if index < 0: # index határérték kezelése
                             index = lSize-1
-                        previous() # Bal
+                        previous()
                     elif event.direction == "right":
                         index += 1
-                        if index == lSize:
+                        if index == lSize: # index határérték kezelése
                             index = 0
-                        next() # Jobb
+                        next()
                     elif event.direction == "middle":
                         play_pause()
-            for event in pygame.event.get():
+            for event in pygame.event.get(): # pygame események figyelése
                 if event.type == SONG_END: # szám végének figyelése
                     newlogline("==========================================")
                     newlogline("The song ended!")
                     print("==========================================")
                     print("The song ended!")
                     index += 1
-                    if index == lSize:
+                    if index == lSize: # index határérték kezelése
                         index = 0
-                    next() # Jobb
+                    next()
     #END - SenseHat event handler
 else:
     newlogline("The music folder is not exists")
