@@ -259,6 +259,7 @@ if os.path.isdir(musicpath) == True: # zene könyvtár meglétének ellenőrzés
         if x > 2 or y > 2 or z > 2: # az eszköz "rázásának" érzékelése
             newlogline("==========================================")
             print("==========================================")
+            newlogline("Accelerometer triggered shake")
             shuffle()
         else:
             for event in sense.stick.get_events(): # senseHat események figyelése
@@ -266,20 +267,25 @@ if os.path.isdir(musicpath) == True: # zene könyvtár meglétének ellenőrzés
                     newlogline("==========================================")
                     print("==========================================")
                     if event.direction == "up":
+                        newlogline("Joystick up pressed")
                         volup()
                     elif event.direction == "down":
+                        newlogline("Joystick down pressed")
                         voldown()
                     elif event.direction == "left":
+                        newlogline("Joystick left pressed")
                         index -= 1
                         if index < 0: # index határérték kezelése
                             index = lSize-1
                         previous()
                     elif event.direction == "right":
+                        newlogline("Joystick right pressed")
                         index += 1
                         if index == lSize: # index határérték kezelése
                             index = 0
                         next()
                     elif event.direction == "middle":
+                        newlogline("Joystick middle pressed")
                         play_pause()
             for event in pygame.event.get(): # pygame események figyelése
                 if event.type == SONG_END: # szám végének figyelése
