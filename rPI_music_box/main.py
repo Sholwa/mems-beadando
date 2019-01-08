@@ -16,6 +16,7 @@ timestamp = datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d_%H.%
 logpath=os.path.join(sys.path[0], "log", "rPI_music_box_")+timestamp+".log"
 def newlogline(string):
     with open(logpath, "a") as log:
+        log.write(datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')+" - ")
         log.write(string+"\n")
 
 # Változók és konstansok definiálása:
